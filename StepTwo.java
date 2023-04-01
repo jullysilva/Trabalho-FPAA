@@ -1,37 +1,40 @@
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Random;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 
 public class StepTwo {
+
     public static void main(String[] args) {
-        List<Integer> vetor = new ArrayList<Integer>();
-        for (int i = 1; i <= 10000; i++) {
-            vetor.add(i);
-        }
-
-        Random random = new Random();
-        List<Integer> resultados = new ArrayList<Integer>();
-        int contador = 0;
+        ArrayList<Integer> lista = gerarLista(10000);
+        int[] resultados = new int[20001]; // para armazenar os resultados dos contadores
+        Random rand = new Random();
         for (int i = 0; i < 1000000; i++) {
-            int numeroSorteado = random.nextInt(11000) + 1;
-            int posicao = 10001;
-            posicao = vetor.indexOf(numeroSorteado);
-            if (posicao != -1) {
-                contador++;
-            }
-            if (i % 500 == 0 && i > 0) {
-                resultados.add(contador);
-                contador = 0;
+            int chave = rand.nextInt(11000) + 1; // sorteia um número entre 1 e 11000
+            int posicao = buscaSequencial(lista, chave);
+            if (posicao == -1) {
+                resultados[20000]++; // número não encontrado, conta na posição 20000
+            } else {
+                resultados[(posicao - 1) / 500]++; // conta na posição correspondente ao contador
             }
         }
-        resultados.add(contador);
+        System.out.println(Arrays.toString(resultados));
+        // exibe os resultados na forma de vetor para conferência
+    }
 
-        System.out.println("Resultados dos contadores de 500 em 500 iterações:");
-        for (int i = 0; i < resultados.size(); i++) {
-            System.out.println((i * 500) + " - " + ((i + 1) * 500) + ": " + resultados.get(i));
+    public static ArrayList<Integer> gerarLista(int tamanho) {
+        ArrayList<Integer> lista = new ArrayList<>();
+        for (int i = 1; i <= tamanho; i++) {
+            lista.add(i); // preenche a lista com os valores de 1 a tamanho
         }
+        return lista;
+    }
+
+    public static int buscaSequencial(ArrayList<Integer> lista, int chave) {
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i) == chave) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
-
